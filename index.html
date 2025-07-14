@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CollabToll - Calculadora de ganancias para influencers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        @keyframes fade-in {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in {
+            animation: fade-in 0.3s ease-out;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #6e45e2 0%, #8921e0 100%);
+            min-height: 100vh;
+        }
+        
+        .social-icon {
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #6e45e2 0%, #8921e0 100%);
+            box-shadow: 0 4px 15px rgba(110, 69, 226, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .gradient-bg:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(110, 69, 226, 0.6);
+            opacity: 0.95;
+        }
+        
+        .glass-card {
+            background: linear-gradient(135deg, rgba(209, 250, 229, 0.15) 0%, rgba(167, 243, 208, 0.15) 100%);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1), 
+                        inset 0 2px 4px rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15), 
+                        inset 0 4px 8px rgba(255, 255, 255, 0.25);
+            background: linear-gradient(135deg, rgba(209, 250, 229, 0.2) 0%, rgba(167, 243, 208, 0.2) 100%);
+        }
+        
+        .history-item {
+            transition: all 0.3s ease;
+            background: rgba(209, 250, 229, 0.1);
+            backdrop-filter: blur(8px);
+        }
+        
+        .history-item:hover {
+            transform: translateY(-4px);
+            background: rgba(209, 250, 229, 0.2);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Block-specific colors */
+        .views-block {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+        }
+
+        .price-block {
+            background: linear-gradient(135deg, #047857 0%, #059669 100%);
+        }
+
+        .cpm-block {
+            background: linear-gradient(135deg, #9a3412 0%, #c2410c 100%);
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            border: 2px solid transparent;
+            background-clip: content-box;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Header -->
+        <header class="mb-10">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 class="text-4xl font-bold text-white flex items-center">
+                        <span class="gradient-bg text-white px-4 py-2 rounded-xl mr-3 text-2xl">CT</span>
+                        CollabToll
+                    </h1>
+                    <p class="text-indigo-100 mt-2 text-lg">Estima tus ganancias siendo influencer</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <select id="currency" class="appearance-none bg-white border border-gray-300 rounded-md py-2 pl-3 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="USD">USD</option>
+                            <option value="ARS">ARS</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Leaderboard Ad -->
+        <div class="glass-card p-4 mb-8 text-center">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                 data-ad-slot="YOUR_LEADERBOARD_SLOT"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Calculator Section -->
+            <div class="lg:col-span-2">
+                <div class="glass-card p-6 mb-8">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-6">Calculadora de colaboraciones</h2>
+                    
+                    <!-- Social Platform Selection -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-white mb-2">Red social</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <button data-platform="instagram" class="social-platform-btn flex items-center justify-center px-4 py-3 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                                <div class="social-icon bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full">
+                                    <i class="fab fa-instagram"></i>
+                                </div>
+                                Instagram
+                            </button>
+                            <button data-platform="tiktok" class="social-platform-btn flex items-center justify-center px-4 py-3 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                                <div class="social-icon bg-black text-white rounded">
+                                    <i class="fab fa-tiktok"></i>
+                                </div>
+                                TikTok
+                            </button>
+                            <button data-platform="youtube" class="social-platform-btn flex items-center justify-center px-4 py-3 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                                <div class="social-icon bg-red-600 text-white rounded">
+                                    <i class="fab fa-youtube"></i>
+                                </div>
+                                YouTube
+                            </button>
+                            <button data-platform="twitch" class="social-platform-btn flex items-center justify-center px-4 py-3 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                                <div class="social-icon bg-purple-600 text-white rounded">
+                                    <i class="fab fa-twitch"></i>
+                                </div>
+                                Twitch
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Input Fields -->
+                    <div class="space-y-4">
+                        <div>
+                            <label for="views" class="block text-sm font-medium text-white">Visualizaciones estimadas</label>
+                            <input type="number" id="views" class="mt-1 block w-full bg-white/20 backdrop-blur-sm text-white placeholder-indigo-200 rounded-xl shadow-inner py-3 px-4 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 text-base" placeholder="Ej: 10000">
+                        </div>
+                        
+                        <div>
+                            <label for="cpm" class="block text-sm font-medium text-white">CPM estimado (USD)</label>
+                            <input type="number" id="cpm" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="CPM">
+                        </div>
+                        
+                        <div>
+                            <label for="budgetTitle" class="block text-sm font-medium text-white">Título del presupuesto (opcional)</label>
+                            <input type="text" id="budgetTitle" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Ej: Colaboración con Marca X">
+                        </div>
+                    </div>
+                    
+                    <button id="calculateBtn" class="mt-6 w-full gradient-bg text-white py-3 px-4 rounded-md font-medium hover:opacity-90 transition flex items-center justify-center">
+                        <i class="fas fa-calculator mr-2"></i> Calcular ganancia estimada
+                    </button>
+                </div>
+
+                <!-- Rectangle Ad -->
+                <div class="glass-card p-4 my-6 text-center">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                         data-ad-slot="YOUR_RECTANGLE_SLOT"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+                
+                <!-- Result Section -->
+                <div id="resultContainer" class="glass-card p-8 hidden text-white">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 id="resultTitle" class="text-lg font-semibold text-gray-800">Presupuesto estimado</h3>
+                            <p id="resultPlatform" class="text-sm text-gray-500"></p>
+                        </div>
+                        <span id="resultBadge" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"></span>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200">
+                            <span class="text-gray-600">Visualizaciones:</span>
+                            <span id="resultViews" class="font-medium"></span>
+                        </div>
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200">
+                            <span class="text-gray-600">CPM:</span>
+                            <span id="resultCPM" class="font-medium"></span>
+                        </div>
+                        <div class="flex justify-between items-center py-3">
+                            <span class="text-gray-600">Ganancia estimada:</span>
+                            <span id="resultEarnings" class="text-2xl font-bold text-indigo-600"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-end">
+                        <div class="flex space-x-3">
+                            <button id="saveResultBtn" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
+                                <i class="fas fa-save mr-1"></i> Guardar
+                            </button>
+                            <button id="exportResultBtn" class="text-gray-600 hover:text-gray-800 text-sm font-medium flex items-center">
+                                <i class="fas fa-download mr-1"></i> Exportar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <!-- History Section -->
+            <div class="lg:col-span-1">
+                <div class="bg-white p-6 sticky top-6 rounded-lg shadow-md">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-semibold text-gray-800">Historial</h2>
+                        <button id="clearHistoryBtn" class="text-gray-500 hover:text-gray-700 text-sm font-medium flex items-center">
+                            <i class="fas fa-trash-alt mr-1"></i> Limpiar
+                        </button>
+                    </div>
+                    
+                    <div id="historyList" class="space-y-3 max-h-96 overflow-y-auto pr-2">
+                        <div class="text-center py-8 text-gray-600">
+                            <i class="fas fa-history text-3xl mb-2"></i>
+                            <p>No hay cálculos recientes</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Auto-clear message -->
+                    <div class="mt-8 pt-6 border-t border-gray-200 text-center bg-gray-50">
+                        <p class="text-xs text-gray-600">
+                            <i class="fas fa-shield-alt mr-1"></i> Privacidad garantizada: Tus cálculos se borran automáticamente cada 24h. No guardamos tus datos en nuestros servidores.
+                        </p>
+                    </div>
+                    
+                    <!-- AdSense Ads -->
+                    <div class="mt-8 pt-6 border-t border-gray-200">
+                        <div class="glass-card p-4 text-center">
+                            <ins class="adsbygoogle"
+                                 style="display:block"
+                                 data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                                 data-ad-slot="YOUR_BANNER_SLOT"
+                                 data-ad-format="auto"
+                                 data-full-width-responsive="true"></ins>
+                            <script>
+                                 (adsbygoogle = window.adsbygoogle || []).push({});
+                            </script>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <div class="glass-card p-4 text-center">
+                            <ins class="adsbygoogle"
+                                 style="display:block"
+                                 data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                                 data-ad-slot="YOUR_SIDEBAR_SLOT"
+                                 data-ad-format="auto"
+                                 data-full-width-responsive="true"></ins>
+                            <script>
+                                 (adsbygoogle = window.adsbygoogle || []).push({});
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+        
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            
+            const colors = {
+                success: 'bg-green-500 text-white',
+                error: 'bg-red-500 text-white', 
+                info: 'bg-blue-500 text-white'
+            };
+            
+            toast.className = `toast animate-fade-in shadow-md px-4 py-3 rounded-md text-sm font-medium ${colors[type]} transition-all duration-500`;
+            toast.innerHTML = `
+                <div class="flex items-center justify-between space-x-2">
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-white text-lg font-bold">&times;</button>
+                </div>
+            `;
+            
+            document.getElementById('toastContainer').appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 400);
+            }, 5000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-clear history after 24 hours
+            const checkHistoryExpiry = () => {
+                const lastVisit = localStorage.getItem('collabTollLastVisit');
+                const now = Date.now();
+                const oneDay = 24 * 60 * 60 * 1000;
+                
+                if (lastVisit && (now - lastVisit > oneDay)) {
+                    localStorage.removeItem('collabTollHistory');
+                    showToast('Historial reiniciado automáticamente cada 24h', 'info');
+                    history = [];
+                    updateHistoryDisplay();
+                }
+                localStorage.setItem('collabTollLastVisit', now);
+            };
+            
+            checkHistoryExpiry();
+
+            // Default CPM values
+            const defaultCPM = {
+                instagram: 8,
+                tiktok: 4,
+                youtube: 12,
+                twitch: 10
+            };
+            
+            // Platform names for display
+            const platformNames = {
+                instagram: 'Instagram',
+                tiktok: 'TikTok',
+                youtube: 'YouTube',
+                twitch: 'Twitch'
+            };
+            
+            // Platform colors
+            const platformColors = {
+                instagram: 'bg-gradient-to-r from-pink-500 to-purple-600',
+                tiktok: 'bg-black',
+                youtube: 'bg-red-600',
+                twitch: 'bg-purple-600'
+            };
+            
+            // Selected platform
+            let selectedPlatform = null;
+            let currentCurrency = 'USD';
+            let history = JSON.parse(localStorage.getItem('collabTollHistory')) || [];
+            const MAX_HISTORY_ITEMS = 50;
+            
+            // DOM Elements
+            const platformButtons = document.querySelectorAll('.social-platform-btn');
+            const viewsInput = document.getElementById('views');
+            const cpmInput = document.getElementById('cpm');
+            const budgetTitleInput = document.getElementById('budgetTitle');
+            const calculateBtn = document.getElementById('calculateBtn');
+            const resultContainer = document.getElementById('resultContainer');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultPlatform = document.getElementById('resultPlatform');
+            const resultBadge = document.getElementById('resultBadge');
+            const resultViews = document.getElementById('resultViews');
+            const resultCPM = document.getElementById('resultCPM');
+            const resultEarnings = document.getElementById('resultEarnings');
+            const saveResultBtn = document.getElementById('saveResultBtn');
+            const exportResultBtn = document.getElementById('exportResultBtn');
+            const historyList = document.getElementById('historyList');
+            const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+            const currencySelect = document.getElementById('currency');
+            
+            // Initialize
+            updateHistoryDisplay();
+            
+            // Event Listeners
+            platformButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    selectedPlatform = this.dataset.platform;
+                    
+                    // Update UI
+                    platformButtons.forEach(btn => {
+                        btn.classList.remove('border-indigo-500', 'bg-indigo-50');
+                    });
+                    this.classList.add('border-indigo-500', 'bg-indigo-50');
+                    
+                    // Set default CPM
+                    cpmInput.value = defaultCPM[selectedPlatform];
+                });
+            });
+            
+            calculateBtn.addEventListener('click', calculateEarnings);
+            saveResultBtn.addEventListener('click', saveToHistory);
+            clearHistoryBtn.addEventListener('click', clearHistory);
+            currencySelect.addEventListener('change', changeCurrency);
+            
+            // Functions
+            function exportResult() {
+                if (!resultContainer || resultContainer.classList.contains('hidden')) return;
+                
+                html2canvas(resultContainer).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'collabtoll-resultado.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                });
+            }
+            function calculateEarnings() {
+                if (!selectedPlatform) {
+                    alert('Por favor selecciona una red social');
+                    return;
+                }
+                
+                const views = parseFloat(viewsInput.value);
+                const cpm = parseFloat(cpmInput.value);
+                
+                if (isNaN(views) || views <= 0) {
+                    alert('Por favor ingresa un número válido de visualizaciones');
+                    return;
+                }
+                
+                if (isNaN(cpm) || cpm <= 0) {
+                    alert('Por favor ingresa un CPM válido');
+                    return;
+                }
+                
+                // Calculate earnings
+                const earnings = (views / 1000) * cpm;
+                
+                // Display result
+                resultTitle.textContent = budgetTitleInput.value || 'Presupuesto estimado';
+                resultPlatform.textContent = platformNames[selectedPlatform];
+                resultBadge.textContent = platformNames[selectedPlatform];
+                resultBadge.className = `inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-white ${platformColors[selectedPlatform]}`;
+                
+                resultViews.textContent = views.toLocaleString() + ' vistas';
+                resultCPM.textContent = `$${cpm.toFixed(2)} USD`;
+                
+                if (currentCurrency === 'USD') {
+                    resultEarnings.textContent = `$${earnings.toFixed(2)} USD`;
+                } else {
+                    // Simple conversion for demo purposes (in a real app, use an API)
+                    const conversionRate = 350; // Approx ARS to USD
+                    resultEarnings.textContent = `$${(earnings * conversionRate).toFixed(2)} ARS`;
+                }
+                
+                resultContainer.classList.remove('hidden');
+            }
+            
+            function saveToHistory() {
+                if (!selectedPlatform || !viewsInput.value || !cpmInput.value) return;
+                
+                const calculation = {
+                    id: Date.now(),
+                    title: budgetTitleInput.value || 'Sin título',
+                    platform: selectedPlatform,
+                    views: parseFloat(viewsInput.value),
+                    cpm: parseFloat(cpmInput.value),
+                    earnings: (parseFloat(viewsInput.value) / 1000) * parseFloat(cpmInput.value),
+                    currency: currentCurrency,
+                    date: new Date().toISOString()
+                };
+                
+                history.unshift(calculation);
+                localStorage.setItem('collabTollHistory', JSON.stringify(history));
+                updateHistoryDisplay();
+                
+                // Show success feedback
+                const originalText = saveResultBtn.innerHTML;
+                saveResultBtn.innerHTML = '<i class="fas fa-check mr-1"></i> Guardado';
+                setTimeout(() => {
+                    saveResultBtn.innerHTML = originalText;
+                }, 2000);
+            }
+            
+            function updateHistoryDisplay() {
+                if (history.length === 0) {
+                    historyList.innerHTML = `
+                        <div class="text-center py-8 text-gray-500">
+                            <i class="fas fa-history text-3xl mb-2"></i>
+                            <p>No hay cálculos recientes</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                historyList.innerHTML = '';
+                
+                // Show only last 5 items in free version
+                const itemsToShow = history.slice(0, 5);
+                
+                itemsToShow.forEach(item => {
+                    const earnings = currentCurrency === 'USD' ? 
+                        `$${item.earnings.toFixed(2)} USD` : 
+                        `$${(item.earnings * 350).toFixed(2)} ARS`;
+                    
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'history-item bg-gray-50 rounded-lg p-4 cursor-pointer hover:bg-gray-100';
+                    historyItem.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-medium text-gray-800 truncate">${item.title}</h4>
+                                <p class="text-sm text-gray-500">${new Date(item.date).toLocaleDateString()}</p>
+                            </div>
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${platformColors[item.platform]} text-white">
+                                ${platformNames[item.platform]}
+                            </span>
+                        </div>
+                        <div class="mt-2 flex justify-between items-center">
+                            <span class="text-sm text-gray-600">${item.views.toLocaleString()} vistas</span>
+                            <span class="font-medium text-indigo-600">${earnings}</span>
+                        </div>
+                    `;
+                    
+                    historyItem.addEventListener('click', () => {
+                        // Fill the form with this history item's data
+                        selectedPlatform = item.platform;
+                        viewsInput.value = item.views;
+                        cpmInput.value = item.cpm;
+                        budgetTitleInput.value = item.title;
+                        
+                        // Update UI
+                        platformButtons.forEach(btn => {
+                            btn.classList.remove('border-indigo-500', 'bg-indigo-50');
+                            if (btn.dataset.platform === selectedPlatform) {
+                                btn.classList.add('border-indigo-500', 'bg-indigo-50');
+                            }
+                        });
+                        
+                        // Show result
+                        resultTitle.textContent = item.title;
+                        resultPlatform.textContent = platformNames[selectedPlatform];
+                        resultBadge.textContent = platformNames[selectedPlatform];
+                        resultBadge.className = `inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-white ${platformColors[selectedPlatform]}`;
+                        
+                        resultViews.textContent = item.views.toLocaleString() + ' vistas';
+                        resultCPM.textContent = `$${item.cpm.toFixed(2)} USD`;
+                        
+                        if (currentCurrency === 'USD') {
+                            resultEarnings.textContent = `$${item.earnings.toFixed(2)} USD`;
+                        } else {
+                            resultEarnings.textContent = `$${(item.earnings * 350).toFixed(2)} ARS`;
+                        }
+                        
+                        resultContainer.classList.remove('hidden');
+                    });
+                    
+                    historyList.appendChild(historyItem);
+                });
+                
+            }
+            
+            function clearHistory() {
+                if (confirm('¿Estás seguro de que quieres borrar el historial?')) {
+                    history = [];
+                    localStorage.removeItem('collabTollHistory');
+                    updateHistoryDisplay();
+                }
+            }
+            
+            function changeCurrency() {
+                currentCurrency = currencySelect.value;
+                
+                // Update all displayed currencies
+                if (resultContainer && !resultContainer.classList.contains('hidden')) {
+                    const earnings = (parseFloat(viewsInput.value) / 1000) * parseFloat(cpmInput.value);
+                    
+                    if (currentCurrency === 'USD') {
+                        resultEarnings.textContent = `$${earnings.toFixed(2)} USD`;
+                    } else {
+                        resultEarnings.textContent = `$${(earnings * 350).toFixed(2)} ARS`;
+                    }
+                }
+                
+                // Update history display
+                updateHistoryDisplay();
+            }
+        });
+    </script>
+        });
+
+    </script>
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
+</body>
+</html>
